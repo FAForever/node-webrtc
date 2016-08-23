@@ -6,6 +6,8 @@
 #include "webrtc/api/mediaconstraintsinterface.h"
 #include "webrtc/api/test/fakeconstraints.h"
 #include "webrtc/base/refcount.h"
+#include "webrtc/system_wrappers/include/clock.h"
+#include "webrtc/api/test/fakeaudiocapturemodule.h"
 
 #include "common.h"
 #include "create-answer-observer.h"
@@ -15,6 +17,7 @@
 #include "set-local-description-observer.h"
 #include "set-remote-description-observer.h"
 #include "stats-observer.h"
+//#include "fakeaudiodevice.h"
 
 using node_webrtc::PeerConnection;
 using v8::External;
@@ -53,8 +56,9 @@ PeerConnection::PeerConnection(webrtc::PeerConnectionInterface::IceServers iceSe
   // FIXME: crashes without these constraints, why?
   constraints.AddMandatory(webrtc::MediaConstraintsInterface::kOfferToReceiveAudio, webrtc::MediaConstraintsInterface::kValueFalse);
   constraints.AddMandatory(webrtc::MediaConstraintsInterface::kOfferToReceiveVideo, webrtc::MediaConstraintsInterface::kValueFalse);
-
-  _jinglePeerConnectionFactory = webrtc::CreatePeerConnectionFactory(_workerThread, _signalingThread, nullptr, nullptr, nullptr);
+  
+  _audioDeviceModule = FakeAudioCaptureModule::Create();
+  _jinglePeerConnectionFactory = webrtc::CreatePeerConnectionFactory(_workerThread, _signalingThread, _audioDeviceModule, nullptr, nullptr);
   _jinglePeerConnection = _jinglePeerConnectionFactory->CreatePeerConnection(configuration, &constraints, nullptr, nullptr, this);
 
   uv_mutex_init(&lock);
