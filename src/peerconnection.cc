@@ -55,8 +55,13 @@ PeerConnection::PeerConnection(webrtc::PeerConnectionInterface::IceServers iceSe
   // FIXME: crashes without these constraints, why?
   constraints.AddMandatory(webrtc::MediaConstraintsInterface::kOfferToReceiveAudio, webrtc::MediaConstraintsInterface::kValueFalse);
   constraints.AddMandatory(webrtc::MediaConstraintsInterface::kOfferToReceiveVideo, webrtc::MediaConstraintsInterface::kValueFalse);
-
-  _audioDeviceModule = new webrtc::test::FakeAudioDevice(webrtc::Clock::GetRealTimeClock(), "/dev/null", 1.0f);
+  
+#ifdef WEBRTC_WIN
+  std::string nullfile = "nul";
+#else
+  std::string nullfile = "/dev/null";
+#endif
+  _audioDeviceModule = new webrtc::test::FakeAudioDevice(webrtc::Clock::GetRealTimeClock(), nullfile, 1.0f);
   _jinglePeerConnectionFactory = webrtc::CreatePeerConnectionFactory(_workerThread, _signalingThread, _audioDeviceModule, nullptr, nullptr);
   _jinglePeerConnection = _jinglePeerConnectionFactory->CreatePeerConnection(configuration, &constraints, nullptr, nullptr, this);
 
