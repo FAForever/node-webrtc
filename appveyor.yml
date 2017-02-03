@@ -1,27 +1,30 @@
-environment:
-  node_pre_gyp_accessKeyId:
-    secure: 1WZP7LlVXMO/uWowkgqEQ9Wz1r8Zu4tPQXLfh3JTFLE=
-  node_pre_gyp_secretAccessKey:
-    secure: L6xhlu4pL2PjxaA2EjB7VU4Tnpdr8D3CEenhPsAjkHXEvs9w+igtW+kvkYqrUUeU
-  matrix:
-    - nodejs_version: "7"
-      platform: x64
-      msvs_toolset: 12
-    - nodejs_version: "6"
-      platform: x64
-      msvs_toolset: 12
-    - nodejs_version: "5"
-      platform: x64
-      msvs_toolset: 12
-    - nodejs_version: "4"
-      platform: x64
-      msvs_toolset: 12
-
 os: Visual Studio 2015
 
-install:
-  - scripts\build-appveyor.bat
+environment:
+  global:
+    chocolateyForceX86: true
 
+install:
+  - choco install nodejs.install 
+  - "\"C:\\Program Files (x86)\\Microsoft Visual Studio 14.0\\VC\\vcvarsall.bat\" x86"
+  - mkdir .\\third_party
+  - mkdir .\\third_party\\webrtc
+  - ps: Invoke-WebRequest -Uri https://github.com/FAForever/libwebrtc/releases/download/v1.0.1-nodewrtc/libwebrtc-1.0.1-nodewrtc-win-x86.7z -OutFile ".\\third_party\\webrtc\\libwebrtc.7z"
+  - cd .\\third_party\\webrtc
+  - "\"C:\\Program Files\\7-Zip\\7z.exe\" x libwebrtc.7z"
+  - cd ..\\..
+  - npm install --build-from-source
+
+artifacts:
+  - path: 'build\**\*.node'
+    name: wrtc_node_module
+
+deploy:
+  - provider: GitHub
+    auth_token:
+      secure: "+Iy9FWEu+rsOymVlUWI8lRdJZRvjOQpOCuEmA2fjHACAzQxrzas9JQi86RUAPj5K"
+    artifact: wrtc_node_module
+    force_update: true
+      
 build: OFF
 test: OFF
-deploy: OFF
