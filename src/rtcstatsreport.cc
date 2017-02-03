@@ -49,12 +49,10 @@ NAN_METHOD(RTCStatsReport::names) {
 
   RTCStatsReport* self = Nan::ObjectWrap::Unwrap<RTCStatsReport>(info.This());
 
-  webrtc::StatsReport::Values values = self->report->values();
-  Local<Array> names = Nan::New<Array>(values.size());
+  Local<Array> names = Nan::New<Array>(self->report->values().size());
   size_t i = 0;
-  for (auto const &pair : values) {
-    const rtc::linked_ptr<webrtc::StatsReport::Value> value = pair.second;
-    std::string display_name = value->display_name();
+  for (auto const &pair : self->report->values()) {
+    std::string display_name = pair.second->display_name();
     names->Set(i++, Nan::New<String>(display_name).ToLocalChecked());
   }
 
@@ -72,12 +70,10 @@ NAN_METHOD(RTCStatsReport::stat) {
   std::string name = std::string(*_name);
 
   Local<Value> found = Nan::Undefined();
-  webrtc::StatsReport::Values values = self->report->values();
-  for (auto const &pair : values) {
-    const rtc::linked_ptr<webrtc::StatsReport::Value> value = pair.second;
-    std::string display_name = std::string(value->display_name());
+  for (auto const &pair : self->report->values()) {
+    std::string display_name = std::string(pair.second->display_name());
     if (display_name.compare(name) == 0) {
-      found = Nan::New<String>(value->ToString()).ToLocalChecked();
+      found = Nan::New<String>(pair.second->ToString()).ToLocalChecked();
     }
   }
 
