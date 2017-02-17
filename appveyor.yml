@@ -16,7 +16,7 @@ install:
   - npm install --build-from-source
 
 artifacts:
-  - path: 'build\**\*.node'
+  - path: 'build\Release\wrtc.node'
     name: wrtc_node_module
 
 deploy:
