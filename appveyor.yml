@@ -9,7 +9,7 @@ install:
   - "\"C:\\Program Files (x86)\\Microsoft Visual Studio 14.0\\VC\\vcvarsall.bat\" x86"
   - mkdir .\\third_party
   - mkdir .\\third_party\\webrtc
-  - ps: Invoke-WebRequest -Uri https://github.com/FAForever/libwebrtc/releases/download/0.0.1-rc.4-faf/libwebrtc-0.0.1-rc.4-win-x86.zip -OutFile ".\\third_party\\webrtc\\libwebrtc.zip"
+  - ps: Invoke-WebRequest -Uri https://github.com/FAForever/libwebrtc/releases/download/v1.0.0-faf/libwebrtc-1.0.0-faf-win-x86.zip -OutFile ".\\third_party\\webrtc\\libwebrtc.zip"
   - cd .\\third_party\\webrtc
   - "\"C:\\Program Files\\7-Zip\\7z.exe\" x libwebrtc.zip"
   - cd ..\\..
