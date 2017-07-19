@@ -1,6 +1,10 @@
 #ifndef SRC_PEERCONNECTION_H_
 #define SRC_PEERCONNECTION_H_
 
+#if defined(_MSC_VER)
+#include <winsock2.h>
+#endif
+
 #include <stdint.h>
 
 #include <string>

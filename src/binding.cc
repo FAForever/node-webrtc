@@ -1,3 +1,7 @@
+#if defined(_MSC_VER)
+#include <winsock2.h>
+#endif
+
 #include "node.h"
 #include "v8.h"
 

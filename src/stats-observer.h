@@ -1,6 +1,10 @@
 #ifndef SRC_STATS_OBSERVER_H_
 #define SRC_STATS_OBSERVER_H_
 
+#if defined(_MSC_VER)
+#include <winsock2.h>
+#endif
+
 #include "nan.h"  // IWYU pragma: keep
 
 #include "webrtc/api/peerconnectioninterface.h"
